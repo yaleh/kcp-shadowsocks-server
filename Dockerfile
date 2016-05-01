@@ -12,8 +12,8 @@ MAINTAINER Yale Huang <calvino.huang@gmail.com>
 RUN apt-get -y update && apt-get -y upgrade
 
 # Install shadowsocks-libev
-RUN apt-get install build-essential autoconf libtool libssl-dev git openjdk-7-jre unzip \
-	libpcap-dev wget supervisor -y
+RUN apt-get install build-essential autoconf libtool libssl-dev git \
+	wget supervisor -y
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git /root/shadowsocks-libev
 RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v2.18/kcptun-linux-amd64.tar.gz
 RUN cd /root/shadowsocks-libev && git checkout v2.4.4 && ./configure && make
