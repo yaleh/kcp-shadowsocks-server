@@ -15,7 +15,7 @@ RUN apt-get -y update && apt-get -y upgrade
 RUN apt-get install build-essential autoconf libtool libssl-dev git \
 	wget supervisor -y
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git /root/shadowsocks-libev
-RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v2.18/kcptun-linux-amd64.tar.gz
+RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v20160506/kcptun-linux-amd64-20160506.tar.gz
 RUN cd /root/shadowsocks-libev && git checkout v2.4.4 && ./configure && make
 RUN cd /root/shadowsocks-libev/src && install -c ss-server /usr/bin
 RUN apt-get purge git build-essential autoconf libtool libssl-dev -y  && apt-get autoremove -y && apt-get autoclean -y
