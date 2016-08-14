@@ -18,7 +18,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git /root/shadows
 RUN cd /root/shadowsocks-libev && git checkout v2.4.4 && ./configure && make
 RUN cd /root/shadowsocks-libev/src && install -c ss-server /usr/bin
 RUN apt-get purge git build-essential autoconf libtool libssl-dev -y  && apt-get autoremove -y && apt-get autoclean -y
-RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v20160524/kcptun-linux-amd64-20160524.tar.gz
+RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v20160811/kcptun-linux-amd64-20160811.tar.gz
 RUN mkdir -p /opt/kcptun && cd /opt/kcptun && tar xvfz /root/kcptun-linux-amd64.tar.gz
 RUN rm -rf /root/shadowsocks-libev
 COPY supervisord.conf /etc/supervisord.conf
