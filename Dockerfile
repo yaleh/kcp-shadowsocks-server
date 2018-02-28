@@ -11,7 +11,8 @@ MAINTAINER Yale Huang <calvino.huang@gmail.com>
 # Install shadowsocks
 RUN apt-get -y update && apt-get -y upgrade && \
 	apt-get install build-essential autoconf automake libtool libssl-dev git \
-		wget supervisor libpcre3-dev libmbedtls-dev libsodium-dev libc-ares-dev libev-dev -y && \
+		wget supervisor libpcre3-dev libmbedtls-dev libsodium-dev libc-ares-dev libev-dev \
+		libev4 libc-ares2 libsodium18 libmbedcrypto0 -y && \
 	git clone https://github.com/shadowsocks/shadowsocks-libev.git /root/shadowsocks-libev && \
 	cd /root/shadowsocks-libev && git checkout v3.1.3 && \
 	git submodule update --init --recursive && \
