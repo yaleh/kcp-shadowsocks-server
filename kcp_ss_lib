@@ -94,7 +94,7 @@ generate_dood_command(){
   local KCPTUN_RCVWND="${11:-256}"
 
   local SS_LINK=$(tag_link $(ss_link $HOST $SS_PORT $SS_PASSWORD) "SS:$HOST:$SS_PORT")
-  local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD) "KCP_SS:$HOST:$SS_PORT")
+  local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD) "KCP_SS:$HOST:$KCPTUN_PORT")
 
   echo "docker run -d --restart=always \
     -e SS_PASSWORD=$SS_PASSWORD -e SS_METHOD=$SS_METHOD \
