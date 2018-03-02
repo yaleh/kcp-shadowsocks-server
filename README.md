@@ -10,7 +10,8 @@ docker run -t -i --rm --network=host \
   -v /var/run/docker.sock:/var/run/docker.sock \
   yaleh/kcp-shadowsocks-server:bootstrap bootstrap
 ```
-The worker container will be setup in seconds. And you will see the Shadowsocks links:
+The worker container will be setup in seconds. Ports and passwords are generated
+by ``Bootstrap`` automatically. And you will see the Shadowsocks links:
 
 ```
 Current container: fec4e0e2b4087aec93315e02a71241188172e7495921c4dc120d91eca84f3b4b
@@ -30,10 +31,24 @@ QR code: https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=ss%3A%2F%
 
 KCPTUN SS link: ss://YWVzLTI1Ni1jZmI6d3VXYWlsNFY=@192.168.0.175:14510?plugin=kcptun%3Bmode%3Dnormal%3Brcvwnd%3D256%3Bsndwnd%3D256%3Bkey%3DwuWail4V%3Bmtu%3D1350#KCP_SS%3A192.168.0.175%3A15358
 QR code: https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=ss%3A%2F%2FYWVzLTI1Ni1jZmI6d3VXYWlsNFY%3D%40192.168.0.175%3A14510%3Fplugin%3Dkcptun%253Bmode%253Dnormal%253Brcvwnd%253D256%253Bsndwnd%253D256%253Bkey%253DwuWail4V%253Bmtu%253D1350%23KCP_SS%253A192.168.0.175%253A15358
-```  
+```
 
-**Notice:** The links of QR code can be opened with your browser. They are QR code
-images which can be scanned and imported by Shadowsocks Android client.
+Then, just import the above ``ss://`` links to your client to your client. It's done! 
+
+### Optional
+
+To see the passwords and other parameters of Shadowsocks and KCPTUN:
+
+```
+docker inspect -f '{{range $_, $e := .Config.Env}}{{println $e}}{{end}}' <WORKDER_CONTAINER_ID>
+```
+
+### Notice
+
+* The links of QR code can be opened with your browser. They are QR code images
+which can be scanned and imported by Shadowsocks Android client.
+* ``Bootstrap`` can be executed for multiple times and you will get multiple running
+worker containers.
 
 ## Manually
 
