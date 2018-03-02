@@ -1,0 +1,94 @@
+#!/bin/bash
+
+. kcp_ss_lib
+
+test_all(){
+  CONTAINER_ID=$(get_docker_container_id)
+  echo $CONTAINER_ID
+
+  IMAGE_ID=$(get_docker_image_id $CONTAINER_ID)
+  echo $IMAGE_ID
+
+  INTERFACE=$(get_default_network_interface)
+  echo $INTERFACE
+
+  NETWORK_ADDRESS=$(get_default_network_ip)
+  echo $NETWORK_ADDRESS
+
+  USED=$(port_used tcp 22)
+  echo $?, $USED
+
+  TCP_PORT=$(find_available_port tcp 22 22)
+  echo $?, $TCP_PORT
+
+  TCP_PORT=$(find_available_port tcp 2000 2080)
+  echo $?, $TCP_PORT
+
+  UDP_PORT=$(find_available_port udp 5353 5353)
+  echo $?, $UDP_PORT
+
+  UDP_PORT=$(find_available_port udp 5353 5360)
+  echo $?, $UDP_PORT
+
+  PASSWORD=$(pwgen 8 1)
+  echo $PASSWORD
+
+  COMMAND_LINE=$(generate_dood_command \
+    $IMAGE_ID $NETWORK_ADDRESS 4000 ss 5000 kcp )
+  echo $COMMAND_LINE
+
+  SS_LINK=$(ss_link "linode.lrfz.com" $TCP_PORT $PASSWORD)
+  echo $SS_LINK
+
+  ENCODED_STR=$(urlencode "abc;=,:ABC")
+  echo $ENCODED_STR
+
+  ENCODED_URL=$(tag_link \
+    $(kcp_ss_link $NETWORK_ADDRESS $TCP_PORT $PASSWORD $UDP_PORT $PASSWORD) \
+    "$NETWORK_ADDRESS:$TCP_PORT")
+  echo $ENCODED_URL
+
+  QR_LINK=$(qr_link $ENCODED_URL)
+  echo $QR_LINK
+}
+
+start_container(){
+  CONTAINER_ID=$(get_docker_container_id)
+  echo "Current container: $CONTAINER_ID"
+
+  IMAGE_ID=$(get_docker_image_id $CONTAINER_ID)
+  echo "Current image: $IMAGE_ID"
+
+  INTERFACE=${ENV_INTERFACE:-$(get_default_network_interface)}
+  echo "Network interface: $INTERFACE"
+
+  HOST=${ENV_HOST:-$(get_default_network_ip)}
+  echo "Host name: $HOST"
+
+  SS_PORT=${ENV_SS_PORT:-$(find_available_port tcp 5000 20000)}
+  echo "Exported Shadowsocks port: $SS_PORT"
+
+  KCP_PORT=${ENV_KCP_PORT:-$(find_available_port udp 5000 20000)}
+  echo "Exported KCPTUN port: $KCP_PORT"
+
+  PASSWORD=${ENV_PASSWORD:-$(pwgen 8 1)}
+  echo "Password: $PASSWORD"
+
+  echo
+
+  COMMAND_LINE=$(generate_dood_command \
+    $IMAGE_ID $HOST $SS_PORT $PASSWORD $KCP_PORT $PASSWORD )
+  echo $COMMAND_LINE
+
+  echo
+
+  WORKDER_CONTAINER_ID=$($COMMAND_LINE)
+  echo "Worker container: $WORKDER_CONTAINER_ID"
+
+  echo
+  
+  docker exec -it $WORKDER_CONTAINER_ID show
+}
+
+#test_all
+start_container

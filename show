@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. kcp_ss_lib
+
+echo "Shadowsocks link: $SS_LINK"
+echo "QR code: $(qr_link $SS_LINK)"
+echo
+echo "KCPTUN SS link: $KCPTUN_SS_LINK"
+echo "QR code: $(qr_link $KCPTUN_SS_LINK)"
+echo

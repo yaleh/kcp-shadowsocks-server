@@ -1,0 +1,152 @@
+#!/bin/bash
+
+urlencode() {
+    # urlencode <string>
+    old_lc_collate=$LC_COLLATE
+    LC_COLLATE=C
+
+    local length="${#1}"
+    for (( i = 0; i < length; i++ )); do
+        local c="${1:i:1}"
+        case $c in
+            [a-zA-Z0-9.~_-]) printf "$c" ;;
+            *) printf '%%%02X' "'$c" ;;
+        esac
+    done
+
+    LC_COLLATE=$old_lc_collate
+}
+
+urldecode() {
+    # urldecode <string>
+
+    local url_encoded="${1//+/ }"
+    printf '%b' "${url_encoded//%/\\x}"
+}
+
+get_docker_container_id(){
+  basename "$(cat /proc/1/cpuset)"
+}
+
+get_docker_image_id(){
+  docker inspect "$1" -f {{.Image}}
+}
+
+get_default_network_interface(){
+  route | grep '^default' | grep -o '[^ ]*$'
+}
+
+get_default_network_ip(){
+  local INTERFACE=$(get_default_network_interface)
+  ifconfig $INTERFACE | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1
+}
+
+random_int(){
+  shuf -i "$1-$2" -n 1
+}
+
+port_used(){
+  local PROTOCOL="$1"
+  local PORT="$2"
+
+  netstat -lnp --$PROTOCOL|grep ":$PORT " >/dev/null 2>&1
+}
+
+find_available_port(){
+  local PROTOCOL="$1"
+  local MIN=$2
+  local MAX=$3
+  local TRIES="${4:-10}"
+
+  for ((i=1;i<=$TRIES;i+=1))
+  do
+    # echo $i
+    local PORT=$(random_int $MIN $MAX)
+    # echo $PORT
+
+    local DUMP
+    DUMP=$(port_used $PROTOCOL $PORT)
+
+    if [ $? -ne 0 ]; then
+      echo $PORT
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+generate_dood_command(){
+  local IMAGE_ID=$1
+  local HOST=$2
+
+  local SS_PORT=$3
+  local SS_PASSWORD=$4
+
+  local KCPTUN_PORT=$5
+  local KCPTUN_PASSWORD=$6
+
+  local SS_METHOD="${7:-aes-256-cfb}"
+
+  local KCPTUN_MODE="${8:-normal}"
+  local KCPTUN_MTU="${9:-1350}"
+  local KCPTUN_SNDWND="${10:-256}"
+  local KCPTUN_RCVWND="${11:-256}"
+
+  local SS_LINK=$(tag_link $(ss_link $HOST $SS_PORT $SS_PASSWORD) "SS:$HOST:$SS_PORT")
+  local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD) "KCP_SS:$HOST:$SS_PORT")
+
+  echo "docker run -d --restart=always \
+    -e SS_PASSWORD=$SS_PASSWORD -e SS_METHOD=$SS_METHOD \
+    -e KCPTUN_MODE=$KCPTUN_MODE -e KCPTUN_PASSWORD=$KCPTUN_PASSWORD \
+    -e KCPTUN_SNDWND=$KCPTUN_SNDWND -e KCPTUN_RCVWND=$KCPTUN_RCVWND \
+    -e SS_LINK=$SS_LINK -e KCPTUN_SS_LINK=$KCPTUN_SS_LINK \
+    -p $SS_PORT:8338/tcp -p $KCPTUN_PORT:41111/udp $IMAGE_ID"
+}
+
+ss_link(){
+  local HOST=$1
+  local PORT=$2
+  local PASSWORD=$3
+
+  local METHOD=${4:-aes-256-cfb}
+
+  local USER_INFO=`echo -n $METHOD:$PASSWORD|base64`
+
+  echo "ss://$USER_INFO@$HOST:$PORT"
+}
+
+kcp_ss_link(){
+  local HOST=$1
+
+  local SS_PORT=$2
+  local SS_PASSWORD=$3
+
+  local KCPTUN_PORT=$4
+  local KCPTUN_PASSWORD=$5
+
+  local SS_METHOD="${6:-aes-256-cfb}"
+
+  local KCPTUN_MODE="${7:-normal}"
+  local KCPTUN_MTU="${8:-1350}"
+  local KCPTUN_SNDWND="${9:-256}"
+  local KCPTUN_RCVWND="${10:-256}"
+
+  local RAW_KCPTUN_PLUGIN_STR="kcptun;mode=$KCPTUN_MODE;rcvwnd=$KCPTUN_RCVWND;sndwnd=$KCPTUN_SNDWND;key=$KCPTUN_PASSWORD;mtu=$KCPTUN_MTU"
+  local RAW_TAG="$HOST:$SS_PORT"
+
+  echo "$(ss_link $HOST $KCPTUN_PORT $SS_PASSWORD $SS_METHOD)?plugin=$(urlencode $RAW_KCPTUN_PLUGIN_STR)"
+}
+
+tag_link(){
+  local LINK=$1
+  local TAG=$2
+
+  echo "$LINK#$(urlencode $TAG)"
+}
+
+qr_link(){
+  local LINK=$1
+
+  echo "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=$(urlencode $LINK)"
+}
