@@ -2,9 +2,15 @@
 
 . kcp_ss_lib
 
-echo "Shadowsocks link: $SS_LINK"
+echo "Shadowsocks link (for Android client): $SS_LINK"
 echo
 echo "QR code: $(qr_link $SS_LINK)"
+echo
+echo "----"
+echo
+echo "Base64 Shadowsocks link (for QT5 client): $BASE64_SS_LINK"
+echo
+echo "QR code: $(qr_link $BASE64_SS_LINK)"
 echo
 echo "----"
 echo

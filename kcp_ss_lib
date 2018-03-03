@@ -101,6 +101,7 @@ generate_dood_command(){
   local KCPTUN_RCVWND="${11:-256}"
 
   local SS_LINK=$(tag_link $(ss_link $HOST $SS_PORT $SS_PASSWORD) "SS:$HOST:$SS_PORT")
+  local BASE64_SS_LINK="$(base64_ss_link $HOST $SS_PORT $SS_PASSWORD)#SS:$HOST:$SS_PORT"
   local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD) "KCP_SS:$HOST:$KCPTUN_PORT")
 
   echo "docker run -d --restart=always \
@@ -109,6 +110,7 @@ generate_dood_command(){
     -e KCPTUN_MODE=$KCPTUN_MODE -e KCPTUN_PASSWORD=$KCPTUN_PASSWORD \
     -e KCPTUN_SNDWND=$KCPTUN_SNDWND -e KCPTUN_RCVWND=$KCPTUN_RCVWND \
     -e SS_LINK=$SS_LINK -e KCPTUN_SS_LINK=$KCPTUN_SS_LINK \
+    -e BASE64_SS_LINK=$BASE64_SS_LINK \
     -p $SS_PORT:8338/tcp -p $KCPTUN_PORT:41111/udp $IMAGE_ID"
 }
 
@@ -122,6 +124,18 @@ ss_link(){
   local USER_INFO=`echo -n $METHOD:$PASSWORD|base64`
 
   echo "ss://$USER_INFO@$HOST:$PORT"
+}
+
+base64_ss_link(){
+  local HOST=$1
+  local PORT=$2
+  local PASSWORD=$3
+
+  local METHOD=${4:-aes-256-cfb}
+
+  local ENCODED=`echo -n $METHOD:$PASSWORD@$HOST:$PORT|base64`
+
+  echo "ss://$ENCODED"
 }
 
 kcp_ss_link(){

@@ -8,14 +8,15 @@ FROM alpine:edge
 
 MAINTAINER Yale Huang <calvino.huang@gmail.com>
 
+RUN apk --no-cache add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+	net-tools pwgen bash supervisor \
+	shadowsocks-libev
+
 # Install additional apckages
-RUN apk update && \
-	apk --no-cache add --virtual .build-deps net-tools pwgen wget bash supervisor
 RUN wget --no-check-certificate https://download.docker.com/linux/static/stable/x86_64/docker-17.12.1-ce.tgz && \
 	tar xvfz docker-17.12.1-ce.tgz && \
 	cp docker/docker /usr/local/bin && \
 	rm -rf docker-17.12.1-ce.tgz docker
-RUN apk --no-cache add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing shadowsocks-libev
 
 # Install kcptun
 RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v20171201/kcptun-linux-amd64-20171201.tar.gz && \
