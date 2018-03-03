@@ -9,7 +9,7 @@ FROM alpine:edge
 MAINTAINER Yale Huang <calvino.huang@gmail.com>
 
 RUN apk --no-cache add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-	net-tools pwgen bash supervisor \
+	net-tools pwgen bash runit \
 	shadowsocks-libev
 
 # Install additional apckages
@@ -23,8 +23,8 @@ RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/rele
 	mkdir -p /opt/kcptun && cd /opt/kcptun && tar xvfz /root/kcptun-linux-amd64.tar.gz && \
 	rm -rf /root/shadowsocks-libev /root/kcptun-linux-amd64.tar.gz
 
-COPY supervisord.conf /etc/supervisord.conf
-COPY kcp_ss_lib bootstrap show /usr/local/bin/
+COPY service /etc/service
+COPY kcp_ss_lib bootstrap show runit_bootstrap /usr/local/bin/
 
 ENV SS_PASSWORD=1234567 SS_METHOD=aes-256-cfb \
 	KCPTUN_PASSWORD=1234567 KCPTUN_MTU=1350 \
@@ -32,7 +32,4 @@ ENV SS_PASSWORD=1234567 SS_METHOD=aes-256-cfb \
 
 EXPOSE 41111/udp 8338/tcp
 
-#RUN uname -a && apt-get install lsb-release -y && lsb_release -a && \
-#	apt-get purge lsb-release && apt-get autoremove -y && apt-get autoclean -y
-
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/local/bin/runit_bootstrap"]
