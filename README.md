@@ -8,7 +8,7 @@ parameter manually. Just copy following line to your terminal and execute it:
 ```bash
 docker run -t -i --rm --network=host \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  yaleh/kcp-shadowsocks-server:bootstrap bootstrap
+  yaleh/kcp-shadowsocks-server bootstrap
 ```
 The worker container will be setup in seconds. Ports and passwords are generated
 by ``Bootstrap`` automatically. And you will see the Shadowsocks links:
