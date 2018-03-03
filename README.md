@@ -33,7 +33,8 @@ KCPTUN SS link: ss://YWVzLTI1Ni1jZmI6d3VXYWlsNFY=@192.168.0.175:14510?plugin=kcp
 QR code: https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=ss%3A%2F%2FYWVzLTI1Ni1jZmI6d3VXYWlsNFY%3D%40192.168.0.175%3A14510%3Fplugin%3Dkcptun%253Bmode%253Dnormal%253Brcvwnd%253D256%253Bsndwnd%253D256%253Bkey%253DwuWail4V%253Bmtu%253D1350%23KCP_SS%253A192.168.0.175%253A15358
 ```
 
-Then, just import the above ``ss://`` links to your client to your client. It's done!
+Then, just import the above ``ss://`` links to your client to your client. It's
+done!
 
 ### Optional
 
@@ -58,8 +59,8 @@ docker inspect -f '{{range $_, $e := .Config.Env}}{{println $e}}{{end}}' <WORKDE
 
 * The links of QR code can be opened with your browser. They are QR code images
 which can be scanned and imported by Shadowsocks Android client.
-* ``Bootstrap`` can be executed for multiple times and you will get multiple running
-worker containers.
+* ``Bootstrap`` can be executed for multiple times and you will get multiple
+running worker containers.
 
 ## Manually
 

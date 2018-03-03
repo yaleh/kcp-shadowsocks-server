@@ -59,19 +59,19 @@ start_container(){
   IMAGE_ID=$(get_docker_image_id $CONTAINER_ID)
   echo "Current image: $IMAGE_ID"
 
-  INTERFACE=${ENV_INTERFACE:-$(get_default_network_interface)}
+  INTERFACE=${INTERFACE:-$(get_default_network_interface)}
   echo "Network interface: $INTERFACE"
 
-  HOST=${ENV_HOST:-$(get_default_network_ip)}
+  HOST=${HOST:-$(get_default_network_ip)}
   echo "Host name: $HOST"
 
-  SS_PORT=${ENV_SS_PORT:-$(find_available_port tcp 5000 20000)}
+  SS_PORT=${SS_PORT:-$(find_available_port tcp 5000 20000)}
   echo "Exported Shadowsocks port: $SS_PORT"
 
-  KCP_PORT=${ENV_KCP_PORT:-$(find_available_port udp 5000 20000)}
+  KCP_PORT=${KCP_PORT:-$(find_available_port udp 5000 20000)}
   echo "Exported KCPTUN port: $KCP_PORT"
 
-  PASSWORD=${ENV_PASSWORD:-$(pwgen 8 1)}
+  PASSWORD=${PASSWORD:-$(pwgen 8 1)}
   echo "Password: $PASSWORD"
 
   echo
@@ -86,7 +86,7 @@ start_container(){
   echo "Worker container: $WORKDER_CONTAINER_ID"
 
   echo
-  
+
   docker exec -it $WORKDER_CONTAINER_ID show
 }
 
