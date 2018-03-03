@@ -9,7 +9,7 @@ urlencode() {
     for (( i = 0; i < length; i++ )); do
         local c="${1:i:1}"
         case $c in
-            [a-zA-Z0-9.~_-]) printf "$c" ;;
+            [a-zA-Z0-9.~\_\-\/]) printf "$c" ;;
             *) printf '%%%02X' "'$c" ;;
         esac
     done
@@ -28,8 +28,8 @@ get_docker_container_id(){
   basename "$(cat /proc/1/cpuset)"
 }
 
-get_docker_image_id(){
-  docker inspect "$1" -f {{.Image}}
+get_docker_image_name(){
+  docker inspect "$1" -f {{.Config.Image}}
 }
 
 get_default_network_interface(){
@@ -76,6 +76,13 @@ find_available_port(){
   return 1
 }
 
+container_name(){
+  local SS_PORT=$1
+  local KCPTUN_PORT=$2
+
+  echo "ss-${SS_PORT}-kcp-${KCPTUN_PORT}"
+}
+
 generate_dood_command(){
   local IMAGE_ID=$1
   local HOST=$2
@@ -97,6 +104,7 @@ generate_dood_command(){
   local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD) "KCP_SS:$HOST:$KCPTUN_PORT")
 
   echo "docker run -d --restart=always \
+    --name $(container_name $SS_PORT $KCPTUN_PORT) \
     -e SS_PASSWORD=$SS_PASSWORD -e SS_METHOD=$SS_METHOD \
     -e KCPTUN_MODE=$KCPTUN_MODE -e KCPTUN_PASSWORD=$KCPTUN_PASSWORD \
     -e KCPTUN_SNDWND=$KCPTUN_SNDWND -e KCPTUN_RCVWND=$KCPTUN_RCVWND \
@@ -149,4 +157,12 @@ qr_link(){
   local LINK=$1
 
   echo "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=$(urlencode $LINK)"
+}
+
+shorten_link(){
+  local LINK=$1
+  local ISGD_URL="https://is.gd/create.php?format=simple&url=$(urlencode $LINK)"
+
+  # echo $ISGD_URL
+  curl -s "$ISGD_URL"
 }

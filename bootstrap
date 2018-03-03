@@ -6,8 +6,8 @@ test_all(){
   CONTAINER_ID=$(get_docker_container_id)
   echo $CONTAINER_ID
 
-  IMAGE_ID=$(get_docker_image_id $CONTAINER_ID)
-  echo $IMAGE_ID
+  IMAGE_NAME=$(get_docker_image_name $CONTAINER_ID)
+  echo $IMAGE_NAME
 
   INTERFACE=$(get_default_network_interface)
   echo $INTERFACE
@@ -34,13 +34,13 @@ test_all(){
   echo $PASSWORD
 
   COMMAND_LINE=$(generate_dood_command \
-    $IMAGE_ID $NETWORK_ADDRESS 4000 ss 5000 kcp )
+    $IMAGE_NAME $NETWORK_ADDRESS 4000 ss 5000 kcp )
   echo $COMMAND_LINE
 
   SS_LINK=$(ss_link "linode.lrfz.com" $TCP_PORT $PASSWORD)
   echo $SS_LINK
 
-  ENCODED_STR=$(urlencode "abc;=,:ABC")
+  ENCODED_STR=$(urlencode "abc://;=,:ABC")
   echo $ENCODED_STR
 
   ENCODED_URL=$(tag_link \
@@ -50,14 +50,17 @@ test_all(){
 
   QR_LINK=$(qr_link $ENCODED_URL)
   echo $QR_LINK
+
+  SHORTEN_LINK=$(shorten_link $(urlencode $QR_LINK))
+  echo $SHORTEN_LINK
 }
 
 start_container(){
   CONTAINER_ID=$(get_docker_container_id)
   echo "Current container: $CONTAINER_ID"
 
-  IMAGE_ID=$(get_docker_image_id $CONTAINER_ID)
-  echo "Current image: $IMAGE_ID"
+  IMAGE_NAME=$(get_docker_image_name $CONTAINER_ID)
+  echo "Current image: $IMAGE_NAME"
 
   INTERFACE=${INTERFACE:-$(get_default_network_interface)}
   echo "Network interface: $INTERFACE"
@@ -77,18 +80,23 @@ start_container(){
   echo
 
   COMMAND_LINE=$(generate_dood_command \
-    $IMAGE_ID $HOST $SS_PORT $PASSWORD $KCP_PORT $PASSWORD )
+    $IMAGE_NAME $HOST $SS_PORT $PASSWORD $KCP_PORT $PASSWORD )
   echo $COMMAND_LINE
 
   echo
 
-  WORKDER_CONTAINER_ID=$($COMMAND_LINE)
-  echo "Worker container: $WORKDER_CONTAINER_ID"
+  WORKER_CONTAINER_ID=$($COMMAND_LINE)
+  echo "Worker container: $WORKER_CONTAINER_ID"
+  WORKER_CONTAINER_NAME=$(docker inspect -f '{{.Name}}' $WORKER_CONTAINER_ID|tail -c +2)
+  echo "Worker container name: $WORKER_CONTAINER_NAME"
 
   echo
+  echo "----"
+  echo
 
-  docker exec -it $WORKDER_CONTAINER_ID show
+  docker exec -it $WORKER_CONTAINER_ID show
 }
 
-#test_all
+# test_all
+
 start_container
