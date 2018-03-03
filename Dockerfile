@@ -4,24 +4,18 @@
 # Command format: Instruction [arguments / command] ..
 
 # Base image to use, this must be set as the first line
-FROM ubuntu:16.04
+FROM alpine:edge
 
 MAINTAINER Yale Huang <calvino.huang@gmail.com>
 
-# Install shadowsocks
-RUN apt-get -y update && apt-get -y upgrade && \
-	apt-get install docker.io net-tools pwgen build-essential autoconf \
-		automake libtool libssl-dev git wget supervisor libpcre3-dev \
-		libmbedtls-dev libsodium-dev libc-ares-dev libev-dev libev4 libc-ares2 \
-		libsodium18 libmbedcrypto0 -y && \
-	git clone https://github.com/shadowsocks/shadowsocks-libev.git /root/shadowsocks-libev && \
-	cd /root/shadowsocks-libev && git checkout v3.1.3 && \
-	git submodule update --init --recursive && \
-	./autogen.sh && ./configure --help && ./configure --disable-documentation && make && \
-	cd /root/shadowsocks-libev/src && install -c ss-server /usr/bin && \
-	apt-get purge git build-essential autoconf automake libtool libssl-dev \
-		libpcre3-dev libmbedtls-dev libsodium-dev libc-ares-dev libev-dev -y && \
-	apt-get autoremove -y && apt-get autoclean -y
+# Install additional apckages
+RUN apk update && \
+	apk --no-cache add --virtual .build-deps net-tools pwgen wget bash supervisor
+RUN wget --no-check-certificate https://download.docker.com/linux/static/stable/x86_64/docker-17.12.1-ce.tgz && \
+	tar xvfz docker-17.12.1-ce.tgz && \
+	cp docker/docker /usr/local/bin && \
+	rm -rf docker-17.12.1-ce.tgz docker
+RUN apk --no-cache add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing shadowsocks-libev
 
 # Install kcptun
 RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v20171201/kcptun-linux-amd64-20171201.tar.gz && \
