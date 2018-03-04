@@ -1,5 +1,11 @@
 # kcp-shadowsocks-server
 
+[![](http://dockeri.co/image/yaleh/kcp-shadowsocks-server)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/builds/)
+[![](https://dockerbuildbadges.quelltext.eu/status.svg?organization=yaleh&repository=kcp-shadowsocks-server)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/builds/) [![](https://images.microbadger.com/badges/image/yaleh/kcp-shadowsocks-server.svg)](https://microbadger.com/images/yaleh/kcp-shadowsocks-server "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/yaleh/kcp-shadowsocks-server.svg)](https://microbadger.com/images/yaleh/kcp-shadowsocks-server "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/yaleh/kcp-shadowsocks-server.svg)](https://microbadger.com/images/yaleh/kcp-shadowsocks-server "Get your own version badge on microbadger.com")
+
+A Docker image of KCPTUN + Shadowsocks, auto-generated parameters and
+`ss://` links.
+
 ## Quick Start
 
 ``Bootstrap`` will help you setup a worker container, without setting any
@@ -10,6 +16,7 @@ docker run -t -i --rm --network=host \
   -v /var/run/docker.sock:/var/run/docker.sock \
   yaleh/kcp-shadowsocks-server bootstrap
 ```
+
 The worker container will be setup in seconds. Ports and passwords are generated
 by ``Bootstrap`` automatically. And you will see the Shadowsocks links:
 
