@@ -1,7 +1,9 @@
 # kcp-shadowsocks-server
 
 [![](http://dockeri.co/image/yaleh/kcp-shadowsocks-server)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/builds/)
-[![](https://dockerbuildbadges.quelltext.eu/status.svg?organization=yaleh&repository=kcp-shadowsocks-server)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/builds/) [![](https://images.microbadger.com/badges/image/yaleh/kcp-shadowsocks-server.svg)](https://microbadger.com/images/yaleh/kcp-shadowsocks-server "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/yaleh/kcp-shadowsocks-server.svg)](https://microbadger.com/images/yaleh/kcp-shadowsocks-server "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/yaleh/kcp-shadowsocks-server.svg)](https://microbadger.com/images/yaleh/kcp-shadowsocks-server "Get your own version badge on microbadger.com")
+
+[![Docker Build Status](https://img.shields.io/docker/build/yaleh/kcp-shadowsocks-server.svg)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/) [![Docker Automated build](https://img.shields.io/docker/automated/yaleh/kcp-shadowsocks-server.svg)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/) [![Docker Stars](https://img.shields.io/docker/stars/yaleh/kcp-shadowsocks-server.svg)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/yaleh/kcp-shadowsocks-server.svg)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/) [![GitHub commits](https://img.shields.io/github/commits-since/yaleh/kcp-shadowsocks-server/init.svg)](https://github.com/yaleh/kcp-shadowsocks-server) [![ImageLayers Size](https://img.shields.io/imagelayers/image-size/yaleh/kcp-shadowsocks-server/latest.svg)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/) [![ImageLayers Layers](https://img.shields.io/imagelayers/layers/yaleh/kcp-shadowsocks-server/latest.svg)](https://hub.docker.com/r/yaleh/kcp-shadowsocks-server/)
 
 A Docker image of KCPTUN + Shadowsocks, auto-generated parameters and
 `ss://` links.
