@@ -97,7 +97,7 @@ start_container(){
   echo "----"
   echo
 
-  docker exec -it $WORKER_CONTAINER_ID show
+  docker exec -i $WORKER_CONTAINER_ID show
 }
 
 # test_all

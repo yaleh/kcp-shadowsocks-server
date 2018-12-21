@@ -2,6 +2,14 @@
 
 . kcp_ss_lib
 
+if [ -z "$SS_LINK" ]; then
+    SS_LINK="$(base64_ss_link $HOST $SS_PORT $SS_PASSWORD $SS_METHOD)#SS:$HOST:$SS_PORT"
+fi
+
+if [ -z "$KCPTUN_SS_LINK" ]; then
+    KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD $SS_METHOD) "KCP_SS:$HOST:$KCPTUN_PORT")
+fi
+
 echo "Shadowsocks link: $SS_LINK"
 echo
 echo "QR code: $(qr_link $SS_LINK)"

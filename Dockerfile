@@ -6,7 +6,7 @@
 # Base image to use, this must be set as the first line
 FROM alpine:edge
 
-MAINTAINER Yale Huang <calvino.huang@gmail.com>
+LABEL maintainer="Yale Huang <calvino.huang@gmail.com>"
 
 # Build arguments
 ARG BUILD_DATE
