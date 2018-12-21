@@ -77,10 +77,13 @@ start_container(){
   PASSWORD=${PASSWORD:-$(pwgen 8 1)}
   echo "Password: $PASSWORD"
 
+  SS_METHOD=${SS_METHOD:-aes-256-cfb}
+  echo "Shadowsocks method: $SS_METHOD"
+
   echo
 
   COMMAND_LINE=$(generate_dood_command \
-    $IMAGE_NAME $HOST $SS_PORT $PASSWORD $KCP_PORT $PASSWORD )
+    $IMAGE_NAME $HOST $SS_PORT $PASSWORD $KCP_PORT $PASSWORD $SS_METHOD)
   echo $COMMAND_LINE
 
   echo
