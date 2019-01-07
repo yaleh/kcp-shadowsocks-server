@@ -74,6 +74,11 @@ start_container(){
   KCP_PORT=${KCP_PORT:-$(find_available_port udp 5000 20000)}
   echo "Exported KCPTUN port: $KCP_PORT"
 
+  if [ $SS_PORT -eq $KCP_PORT ]; then
+	echo "ERROR: SS_PORT $SS_PORT is equal to KCP_PORT $KCP_PORT." >&2
+	exit 1
+  fi
+
   PASSWORD=${PASSWORD:-$(pwgen 8 1)}
   echo "Password: $PASSWORD"
 

@@ -2,4 +2,4 @@
 
 exec 2>&1
 source /etc/envvars
-/usr/bin/ss-server -s 0.0.0.0 -p 8338 -k "${SS_PASSWORD}" -m ${SS_METHOD}
+/usr/bin/ss-server -s 0.0.0.0 -p 8338 -k "${SS_PASSWORD}" -m ${SS_METHOD} -u
