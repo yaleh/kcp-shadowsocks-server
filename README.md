@@ -72,6 +72,17 @@ QR code: https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=ss%3A%2F%
 docker inspect -f '{{range $_, $e := .Config.Env}}{{println $e}}{{end}}' <WORKDER_CONTAINER_ID>
 ```
 
+* To avoid KCPTUN encryption overhead (SS payload is encrypted), KCPTUN crypt can be set to ``none``:
+
+```bash
+docker run -t -i --rm --network=host \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -e KCPTUN_CRYPT=none \
+  yaleh/kcp-shadowsocks-server bootstrap
+```
+
+NOTICE: KCPTUN crypt option needs to be set at the client also to make it work.
+
 ### Notice
 
 * The links of QR code can be opened with your browser. They are QR code images

@@ -42,6 +42,7 @@ COPY service /etc/service
 COPY kcp_ss_lib bootstrap show runit_bootstrap /usr/local/bin/
 
 ENV SS_PASSWORD=1234567 SS_METHOD=aes-256-cfb \
+	KCPTUN_CRYPT=aes \
 	KCPTUN_PASSWORD=1234567 KCPTUN_MTU=1350 \
 	KCPTUN_SNDWND=128 KCPTUN_RCVWND=1024 KCPTUN_MODE=fast
 

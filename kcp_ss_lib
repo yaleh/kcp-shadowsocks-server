@@ -95,17 +95,19 @@ generate_dood_command(){
 
   local SS_METHOD="${7:-aes-256-cfb}"
 
-  local KCPTUN_MODE="${8:-normal}"
-  local KCPTUN_MTU="${9:-1350}"
-  local KCPTUN_SNDWND="${10:-256}"
-  local KCPTUN_RCVWND="${11:-256}"
+  local KCPTUN_CRYPT="${8:-aes}"
+  local KCPTUN_MODE="${9:-normal}"
+  local KCPTUN_MTU="${10:-1350}"
+  local KCPTUN_SNDWND="${11:-256}"
+  local KCPTUN_RCVWND="${12:-256}"
 
   local SS_LINK="$(base64_ss_link $HOST $SS_PORT $SS_PASSWORD $SS_METHOD)#SS:$HOST:$SS_PORT"
-  local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD $SS_METHOD) "KCP_SS:$HOST:$KCPTUN_PORT")
+  local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD $SS_METHOD $KCP_CRYPT) "KCP_SS:$HOST:$KCPTUN_PORT")
 
   echo "docker run -d --restart=always \
     --name $(container_name $SS_PORT $KCPTUN_PORT) \
     -e SS_PASSWORD=$SS_PASSWORD -e SS_METHOD=$SS_METHOD \
+    -e KCPTUN_CRYPT=$KCPTUN_CRYPT \
     -e KCPTUN_MODE=$KCPTUN_MODE -e KCPTUN_PASSWORD=$KCPTUN_PASSWORD \
     -e KCPTUN_SNDWND=$KCPTUN_SNDWND -e KCPTUN_RCVWND=$KCPTUN_RCVWND \
     -e SS_LINK=$SS_LINK -e KCPTUN_SS_LINK=$KCPTUN_SS_LINK \
@@ -153,14 +155,15 @@ kcp_ss_link(){
 
   local SS_METHOD="${6:-aes-256-cfb}"
 
-  local KCPTUN_MODE="${7:-normal}"
-  local KCPTUN_MTU="${8:-1350}"
-  local KCPTUN_SNDWND="${9:-256}"
-  local KCPTUN_RCVWND="${10:-256}"
+  local KCPTUN_CRYPT="${7:-aes}"
+  local KCPTUN_MODE="${8:-normal}"
+  local KCPTUN_MTU="${9:-1350}"
+  local KCPTUN_SNDWND="${10:-256}"
+  local KCPTUN_RCVWND="${11:-256}"
 
   local USER_INFO=`echo -n $SS_METHOD:$SS_PASSWORD|base64`
 
-  local RAW_KCPTUN_PLUGIN_STR="kcptun;mode=$KCPTUN_MODE;rcvwnd=$KCPTUN_RCVWND;sndwnd=$KCPTUN_SNDWND;key=$KCPTUN_PASSWORD;mtu=$KCPTUN_MTU"
+  local RAW_KCPTUN_PLUGIN_STR="kcptun;crypt=$KCPTUN_CRYPT;mode=$KCPTUN_MODE;rcvwnd=$KCPTUN_RCVWND;sndwnd=$KCPTUN_SNDWND;key=$KCPTUN_PASSWORD;mtu=$KCPTUN_MTU"
 
   echo "ss://$USER_INFO@$HOST:$KCPTUN_PORT?plugin=$(urlencode $RAW_KCPTUN_PLUGIN_STR)"
 }

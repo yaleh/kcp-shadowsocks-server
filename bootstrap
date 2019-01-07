@@ -71,11 +71,11 @@ start_container(){
   SS_PORT=${SS_PORT:-$(find_available_port tcp 5000 20000)}
   echo "Exported Shadowsocks port: $SS_PORT"
 
-  KCP_PORT=${KCP_PORT:-$(find_available_port udp 5000 20000)}
-  echo "Exported KCPTUN port: $KCP_PORT"
+  KCPTUN_PORT=${KCPTUN_PORT:-$(find_available_port udp 5000 20000)}
+  echo "Exported KCPTUN port: $KCPTUN_PORT"
 
-  if [ $SS_PORT -eq $KCP_PORT ]; then
-	echo "ERROR: SS_PORT $SS_PORT is equal to KCP_PORT $KCP_PORT." >&2
+  if [ $SS_PORT -eq $KCPTUN_PORT ]; then
+	echo "ERROR: SS_PORT $SS_PORT is equal to KCPTUN_PORT $KCPTUN_PORT." >&2
 	exit 1
   fi
 
@@ -85,10 +85,13 @@ start_container(){
   SS_METHOD=${SS_METHOD:-aes-256-cfb}
   echo "Shadowsocks method: $SS_METHOD"
 
+  KCPTUN_CRYPT=${KCPTUN_CRYPT:-aes}
+  echo "KCPTUN crypt: $KCPTUN_CRYPT"
+
   echo
 
   COMMAND_LINE=$(generate_dood_command \
-    $IMAGE_NAME $HOST $SS_PORT $PASSWORD $KCP_PORT $PASSWORD $SS_METHOD)
+    $IMAGE_NAME $HOST $SS_PORT $PASSWORD $KCPTUN_PORT $PASSWORD $SS_METHOD $KCPTUN_CRYPT)
   echo $COMMAND_LINE
 
   echo
