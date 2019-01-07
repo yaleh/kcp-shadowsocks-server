@@ -81,7 +81,7 @@ docker run -t -i --rm --network=host \
   yaleh/kcp-shadowsocks-server bootstrap
 ```
 
-NOTICE: KCPTUN crypt option needs to be set at the client also to make it work.
+KCPTUN crypt option needs to be set at the client also to make it work.
 
 ### Notice
 
