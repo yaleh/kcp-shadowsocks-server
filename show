@@ -7,7 +7,7 @@ if [ -z "$SS_LINK" ]; then
 fi
 
 if [ -z "$KCPTUN_SS_LINK" ]; then
-    KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD $SS_METHOD) "KCP_SS:$HOST:$KCPTUN_PORT")
+    KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD $SS_METHOD $KCPTUN_CRYPT) "KCP_SS:$HOST:$KCPTUN_PORT")
 fi
 
 echo "Shadowsocks link: $SS_LINK"
