@@ -34,7 +34,7 @@ RUN wget --no-check-certificate https://download.docker.com/linux/static/stable/
 	rm -rf docker-18.06.3-ce.tgz docker
 
 # Install kcptun
-RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/20190708/kcptun-linux-amd64-20190708.tar.gz && \
+RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v20190709/kcptun-linux-amd64-20190709.tar.gz && \
 	mkdir -p /opt/kcptun && cd /opt/kcptun && tar xvfz /root/kcptun-linux-amd64.tar.gz && \
 	rm -rf /root/shadowsocks-libev /root/kcptun-linux-amd64.tar.gz
 
