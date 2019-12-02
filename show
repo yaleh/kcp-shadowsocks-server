@@ -16,7 +16,7 @@ echo "QR code: $(qr_link $SS_LINK)"
 echo
 echo "----"
 echo
-echo "KCPTUN SS link (for Android client only): $KCPTUN_SS_LINK"
+echo "KCPTUN SS link (for Android and Windows clients): $KCPTUN_SS_LINK"
 echo
 echo "QR code: $(qr_link $KCPTUN_SS_LINK)"
 echo

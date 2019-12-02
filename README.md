@@ -44,7 +44,7 @@ QR code: https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=ss%3A//YW
 
 ----
 
-KCPTUN SS link (for Android client only): ss://YWVzLTI1Ni1jZmI6b2hIb2g0Ymk=@172.18.0.25:9974?plugin=kcptun%3Bmode%3Dnormal%3Brcvwnd%3D256%3Bsndwnd%3D256%3Bkey%3DohHoh4bi%3Bmtu%3D1350#KCP_SS%3A172.18.0.25%3A9974
+KCPTUN SS link (for Android and Windows clients): ss://YWVzLTI1Ni1jZmI6b2hIb2g0Ymk=@172.18.0.25:9974?plugin=kcptun%3Bmode%3Dnormal%3Brcvwnd%3D256%3Bsndwnd%3D256%3Bkey%3DohHoh4bi%3Bmtu%3D1350#KCP_SS%3A172.18.0.25%3A9974
 
 QR code: https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=ss%3A//YWVzLTI1Ni1jZmI6b2hIb2g0Ymk%3D%40172.18.0.25%3A9974%3Fplugin%3Dkcptun%253Bmode%253Dnormal%253Brcvwnd%253D256%253Bsndwnd%253D256%253Bkey%253DohHoh4bi%253Bmtu%253D1350%23KCP_SS%253A172.18.0.25%253A9974
 
@@ -82,6 +82,13 @@ docker run -t -i --rm --network=host \
 ```
 
 KCPTUN crypt option needs to be set at the client also to make it work.
+
+### Windows KCPTun Client
+
+To use the ``ss://`` links with ``kcptun``, please notice:
+
+* Please use https://github.com/shadowsocks/kcptun, which is compatible with SIP003 protocol. https://github.com/xtaci/kcptun is incomplatible with SIP003, and requires manual settings of command line parameters.
+* To use the ``ss://`` links from ``kcp-shadowsocks-server``, please place ``client_windows_amd64.exe`` from https://github.com/shadowsocks/kcptun in the same folder of Shadowsocks, and rename it to ``kcptun.exe``.
 
 ### Notice
 

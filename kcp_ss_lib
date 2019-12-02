@@ -111,6 +111,7 @@ generate_dood_command(){
     -e KCPTUN_MODE=$KCPTUN_MODE -e KCPTUN_PASSWORD=$KCPTUN_PASSWORD \
     -e KCPTUN_SNDWND=$KCPTUN_SNDWND -e KCPTUN_RCVWND=$KCPTUN_RCVWND \
     -e SS_LINK=$SS_LINK -e KCPTUN_SS_LINK=$KCPTUN_SS_LINK \
+    --log-opt max-size=200k --log-opt max-file=1 \
     -p $SS_PORT:8338/tcp -p $SS_PORT:8338/udp -p $KCPTUN_PORT:41111/udp $IMAGE_ID"
 }
 
