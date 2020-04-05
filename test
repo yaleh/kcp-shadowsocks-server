@@ -1,0 +1,65 @@
+#!/bin/bash
+
+source kcp_ss_lib
+
+test_all(){
+  CONTAINER_ID=$(get_docker_container_id)
+  echo $CONTAINER_ID
+
+  IMAGE_NAME=$(get_docker_image_name $CONTAINER_ID)
+  echo $IMAGE_NAME
+
+  INTERFACE=$(get_default_network_interface)
+  echo $INTERFACE
+
+  NETWORK_ADDRESS=$(get_default_network_ip)
+  echo $NETWORK_ADDRESS
+
+  # port_used tcp 22
+
+  USED=$(port_used tcp 22)
+  echo $?, $USED
+
+  TCP_PORT=$(find_available_port tcp 22 22)
+  echo $?, $TCP_PORT
+
+  TCP_PORT=$(find_available_port tcp 2000 2080)
+  echo $?, $TCP_PORT
+
+  UDP_PORT=$(find_available_port udp 5353 5353)
+  echo $?, $UDP_PORT
+
+  UDP_PORT=$(find_available_port udp 5353 5360)
+  echo $?, $UDP_PORT
+
+  PASSWORD=$(pwgen 8 1)
+  echo $PASSWORD
+
+  KCPTUN_CLIENT_SNDWND=1024
+
+  setup_bootstrap_envs
+
+  SS_PORT=4000 SS_PASSWORD=ss KCPTUN_PORT=5000 KCPTUN_PASSWORD=kcp
+  COMMAND_LINE=$(generate_dood_command \
+    $IMAGE_NAME $NETWORK_ADDRESS)
+  echo $COMMAND_LINE
+
+  SS_LINK=$(ss_link "www.google.com")
+  echo $SS_LINK
+
+  ENCODED_STR=$(urlencode "abc://;=,:ABC")
+  echo $ENCODED_STR
+
+  ENCODED_URL=$(tag_link \
+    $(kcp_ss_link $NETWORK_ADDRESS $TCP_PORT $PASSWORD $UDP_PORT $PASSWORD) \
+    "$NETWORK_ADDRESS:$TCP_PORT")
+  echo $ENCODED_URL
+
+  QR_LINK=$(qr_link $ENCODED_URL)
+  echo $QR_LINK
+
+  # SHORTEN_LINK=$(shorten_link $(urlencode $QR_LINK))
+  # echo $SHORTEN_LINK
+}
+
+test_all

@@ -83,6 +83,19 @@ docker run -t -i --rm --network=host \
 
 KCPTUN crypt option needs to be set at the client also to make it work.
 
+### Env Variables
+
+* SS_PASSWORD
+* SS_METHOD
+*	KCPTUN_CRYPT
+*	KCPTUN_PASSWORD
+* KCPTUN_MTU
+*	KCPTUN_SNDWND
+* KCPTUN_RCVWND
+* KCPTUN_MODE
+* KCPTUN_DATASHARD
+* KCPTUN_PARITYSHARD
+
 ### Windows KCPTun Client
 
 To use the ``ss://`` links with ``kcptun``, please notice:

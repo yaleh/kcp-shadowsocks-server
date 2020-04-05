@@ -83,33 +83,64 @@ container_name(){
   echo "ss-${SS_PORT}-kcp-${KCPTUN_PORT}"
 }
 
+setup_bootstrap_envs(){
+  SS_PORT=${SS_PORT:-$(find_available_port tcp 5000 20000)}
+
+  KCPTUN_PORT=${KCPTUN_PORT:-$(find_available_port udp 5000 20000)}
+
+  if [ $SS_PORT -eq $KCPTUN_PORT ]; then
+  	echo "ERROR: SS_PORT $SS_PORT is equal to KCPTUN_PORT $KCPTUN_PORT." >&2
+  	exit 1
+  fi
+
+  PASSWORD=${PASSWORD:-$(pwgen 8 1)}
+
+  SS_PASSWORD=${SS_PASSWORD:-${PASSWORD}}
+
+  KCPTUN_PASSWORD=${KCPTUN_PASSWORD:-${PASSWORD}}
+
+  SS_METHOD=${SS_METHOD:-aes-256-cfb}
+
+  KCPTUN_CRYPT=${KCPTUN_CRYPT:-aes}
+
+  KCPTUN_MODE=${KCPTUN_MODE:-normal}
+
+  SS_METHOD="${SS_METHOD:-aes-256-cfb}"
+
+  KCPTUN_CRYPT="${KCPTUN_CRYPT:-aes}"
+  
+  KCPTUN_MODE="${KCPTUN_MODE:-normal}"
+
+  KCPTUN_MTU="${KCPTUN_MTU:-1350}"
+
+  KCPTUN_SNDWND="${KCPTUN_SNDWND:-256}"
+
+  KCPTUN_CLIENT_SNDWND="${KCPTUN_CLIENT_SNDWND:-${KCPTUN_SNDWND}}"
+
+  KCPTUN_RCVWND="${KCPTUN_RCVWND:-256}"
+
+  KCPTUN_DATASHARD="${KCPTUN_DATASHARD:-10}"
+
+  KCPTUN_PARITYSHARD="${KCPTUN_PARITYSHARD:-3}"
+
+  set|grep -e '^SS_'
+  set|grep -e '^KCPTUN_'
+}
+
 generate_dood_command(){
   local IMAGE_ID=$1
   local HOST=$2
 
-  local SS_PORT=$3
-  local SS_PASSWORD=$4
-
-  local KCPTUN_PORT=$5
-  local KCPTUN_PASSWORD=$6
-
-  local SS_METHOD="${7:-aes-256-cfb}"
-
-  local KCPTUN_CRYPT="${8:-aes}"
-  local KCPTUN_MODE="${9:-normal}"
-  local KCPTUN_MTU="${10:-1350}"
-  local KCPTUN_SNDWND="${11:-256}"
-  local KCPTUN_RCVWND="${12:-256}"
-
-  local SS_LINK="$(base64_ss_link $HOST $SS_PORT $SS_PASSWORD $SS_METHOD)#SS:$HOST:$SS_PORT"
-  local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD $SS_METHOD $KCPTUN_CRYPT) "KCPSS:$HOST:$KCPTUN_PORT")
+  local SS_LINK="$(base64_ss_link $HOST)#SS:$HOST:$SS_PORT"
+  local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST) "KCPSS:$HOST:$KCPTUN_PORT")
 
   echo "docker run -d --restart=always \
     --name $(container_name $SS_PORT $KCPTUN_PORT) \
     -e SS_PASSWORD=$SS_PASSWORD -e SS_METHOD=$SS_METHOD \
     -e KCPTUN_CRYPT=$KCPTUN_CRYPT \
-    -e KCPTUN_MODE=$KCPTUN_MODE -e KCPTUN_PASSWORD=$KCPTUN_PASSWORD \
+    -e KCPTUN_MODE=$KCPTUN_MODE -e KCPTUN_PASSWORD=$KCPTUN_PASSWORD -e KCPTUN_MTU=$KCPTUN_MTU \
     -e KCPTUN_SNDWND=$KCPTUN_SNDWND -e KCPTUN_RCVWND=$KCPTUN_RCVWND \
+    -e KCPTUN_DATASHARD=$KCPTUN_DATASHARD -e KCPTUN_PARITYSHARD=$KCPTUN_PARITYSHARD \
     -e SS_LINK=$SS_LINK -e KCPTUN_SS_LINK=$KCPTUN_SS_LINK \
     --log-opt max-size=200k --log-opt max-file=1 \
     -p $SS_PORT:8338/tcp -p $SS_PORT:8338/udp -p $KCPTUN_PORT:41111/udp $IMAGE_ID"
@@ -117,14 +148,10 @@ generate_dood_command(){
 
 ss_link(){
   local HOST=$1
-  local PORT=$2
-  local PASSWORD=$3
 
-  local METHOD=${4:-aes-256-cfb}
+  local USER_INFO=`echo -n $SS_METHOD:$SS_PASSWORD|base64`
 
-  local USER_INFO=`echo -n $METHOD:$PASSWORD|base64`
-
-  echo "ss://$USER_INFO@$HOST:$PORT"
+  echo "ss://$USER_INFO@$HOST:$SS_PORT"
 }
 
 base64_ss_link(){
@@ -132,12 +159,8 @@ base64_ss_link(){
   # compatible with Shadowsocks QT5 and Shadowsocks Android
 
   local HOST=$1
-  local PORT=$2
-  local PASSWORD=$3
 
-  local METHOD=${4:-aes-256-cfb}
-
-  local ENCODED=`echo -n $METHOD:$PASSWORD@$HOST:$PORT|base64|tr -d "\n"`
+  local ENCODED=`echo -n $SS_METHOD:$SS_PASSWORD@$HOST:$SS_PORT|base64|tr -d "\n"`
 
   echo "ss://$ENCODED"
 }
@@ -148,23 +171,11 @@ kcp_ss_link(){
 
   local HOST=$1
 
-  local SS_PORT=$2
-  local SS_PASSWORD=$3
-
-  local KCPTUN_PORT=$4
-  local KCPTUN_PASSWORD=$5
-
-  local SS_METHOD="${6:-aes-256-cfb}"
-
-  local KCPTUN_CRYPT="${7:-aes}"
-  local KCPTUN_MODE="${8:-normal}"
-  local KCPTUN_MTU="${9:-1350}"
-  local KCPTUN_SNDWND="${10:-256}"
-  local KCPTUN_RCVWND="${11:-256}"
-
   local USER_INFO=`echo -n $SS_METHOD:$SS_PASSWORD|base64`
 
-  local RAW_KCPTUN_PLUGIN_STR="kcptun;crypt=$KCPTUN_CRYPT;mode=$KCPTUN_MODE;rcvwnd=$KCPTUN_RCVWND;sndwnd=$KCPTUN_SNDWND;key=$KCPTUN_PASSWORD;mtu=$KCPTUN_MTU"
+  local RAW_KCPTUN_PLUGIN_STR="kcptun;crypt=$KCPTUN_CRYPT;mode=$KCPTUN_MODE"
+  RAW_KCPTUN_PLUGIN_STR+=";rcvwnd=$KCPTUN_RCVWND;sndwnd=$KCPTUN_CLIENT_SNDWND;key=$KCPTUN_PASSWORD;mtu=$KCPTUN_MTU"
+  RAW_KCPTUN_PLUGIN_STR+=";datashard=$KCPTUN_DATASHARD;parityshard=$KCPTUN_PARITYSHARD"
 
   echo "ss://$USER_INFO@$HOST:$KCPTUN_PORT?plugin=$(urlencode $RAW_KCPTUN_PLUGIN_STR)"
 }

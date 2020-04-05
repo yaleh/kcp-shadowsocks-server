@@ -3,5 +3,7 @@
 exec 2>&1
 source /etc/envvars
 /opt/kcptun/server_linux_amd64 -l ":41111" -t "127.0.0.1:8338" \
-  --key "$KCPTUN_PASSWORD" --mtu $KCPTUN_MTU --sndwnd $KCPTUN_SNDWND \
-  --rcvwnd $KCPTUN_RCVWND --mode $KCPTUN_MODE --crypt $KCPTUN_CRYPT
+  --key "$KCPTUN_PASSWORD" --mtu $KCPTUN_MTU \
+  --sndwnd $KCPTUN_SNDWND --rcvwnd $KCPTUN_RCVWND \
+  --mode $KCPTUN_MODE --crypt $KCPTUN_CRYPT \
+  --datashard $KCPTUN_DATASHARD --parityshard $KCPTUN_PARITYSHARD
