@@ -28,7 +28,7 @@ RUN apk --no-cache add --repository http://dl-cdn.alpinelinux.org/alpine/edge/te
 	shadowsocks-libev
 
 # Install additional apckages
-RUN wget --no-check-certificate -O docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-20.10.5.tgz && \
+RUN wget --no-check-certificate -O docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-20.10.6.tgz && \
 	tar xvfz docker.tgz && \
 	cp docker/docker /usr/local/bin && \
 	rm -rf docker.tgz docker
