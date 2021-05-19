@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. kcp_ss_lib
+. /usr/local/bin/kcp_ss_lib
 
 start_container(){
   CONTAINER_ID=$(get_docker_container_id)
