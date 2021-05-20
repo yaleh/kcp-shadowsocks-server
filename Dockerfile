@@ -41,7 +41,7 @@ RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/rele
 COPY service /etc/service
 COPY kcp_ss_lib bootstrap show runit_bootstrap /usr/local/bin/
 
-ENV SS_METHOD=aes-256-cfb \
+ENV SS_METHOD=aes-256-gcm \
 	KCPTUN_CRYPT=aes KCPTUN_MTU=1350 KCPTUN_MODE=normal \
 	KCPTUN_SNDWND=4096 KCPTUN_CLIENT_SNDWND=1024 KCPTUN_RCVWND=8192 \
 	KCPTUN_DATASHARD=35 KCPTUN_PARITYSHARD=15

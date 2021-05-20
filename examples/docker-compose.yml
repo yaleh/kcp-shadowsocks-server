@@ -1,7 +1,7 @@
 version: '3'
 
 # docker run -d --restart=always --name ss-15858-kcp-9974 \
-#     -e SS_PASSWORD=ohHoh4bi -e SS_METHOD=aes-256-cfb -e KCPTUN_MODE=normal \
+#     -e SS_PASSWORD=ohHoh4bi -e SS_METHOD=aes-256-gcm -e KCPTUN_MODE=normal \
 #     -e KCPTUN_PASSWORD=ohHoh4bi -e KCPTUN_SNDWND=256 -e KCPTUN_RCVWND=256 \
 #     -e SS_LINK=ss://YWVzLTI1Ni1jZmI6b2hIb2g0YmlAMTcyLjE4LjAuMjU6MTU4NTg=#SS:172.18.0.25:15858 \
 #     -e KCPTUN_SS_LINK=ss://YWVzLTI1Ni1jZmI6b2hIb2g0Ymk=@172.18.0.25:9974?plugin=kcptun%3Bmode%3Dnormal%3Brcvwnd%3D256%3Bsndwnd%3D256%3Bkey%3DohHoh4bi%3Bmtu%3D1350#KCP_SS%3A172.18.0.25%3A9974 \
