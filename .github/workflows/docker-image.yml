@@ -30,7 +30,7 @@ jobs:
     - name: Push the tagged Docker image
       run: docker push yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
     - name: Build the branch Docker image
-      run: docker build . --file Dockerfile --tag yaleh/kcp-shadowsocks-server:${steps.branch_name.outputs.branch}
+      run: docker build . --file Dockerfile --tag yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
     - name: Push the tagged branch Docker image
-      run: docker push yaleh/kcp-shadowsocks-server:${steps.branch_name.outputs.branch}
+      run: docker push yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
     
