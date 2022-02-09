@@ -28,13 +28,13 @@ RUN apk --no-cache add --repository http://dl-cdn.alpinelinux.org/alpine/edge/te
 	shadowsocks-libev
 
 # Install additional apckages
-RUN wget --no-check-certificate -O docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-20.10.6.tgz && \
+RUN wget --no-check-certificate -O docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-20.10.12.tgz && \
 	tar xvfz docker.tgz && \
 	cp docker/docker /usr/local/bin && \
 	rm -rf docker.tgz docker
 
 # Install kcptun
-RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v20210103/kcptun-linux-amd64-20210103.tar.gz && \
+RUN wget -O /root/kcptun-linux-amd64.tar.gz https://github.com/xtaci/kcptun/releases/download/v20210922/kcptun-linux-amd64-20210922.tar.gz && \
 	mkdir -p /opt/kcptun && cd /opt/kcptun && tar xvfz /root/kcptun-linux-amd64.tar.gz && \
 	rm -rf /root/shadowsocks-libev /root/kcptun-linux-amd64.tar.gz
 

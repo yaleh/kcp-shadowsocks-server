@@ -6,16 +6,30 @@ if [ -z "$SS_LINK" ]; then
     SS_LINK="$(base64_ss_link $HOST $SS_PORT $SS_PASSWORD $SS_METHOD)#SS:$HOST:$SS_PORT"
 fi
 
+if [ -z "$SIP002_LINK"]; then
+    SIP002_LINK=$(tag_link $(sip002_link $HOST $SS_PORT) "SS:$HOST:$SS_PORT")
+fi
+
 if [ -z "$KCPTUN_SS_LINK" ]; then
     KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST $SS_PORT $SS_PASSWORD $KCPTUN_PORT $KCPTUN_PASSWORD $SS_METHOD $KCPTUN_CRYPT) "KCP_SS:$HOST:$KCPTUN_PORT")
 fi
 
-echo "Shadowsocks link: $SS_LINK"
+echo "Shadowsocks original link: $SS_LINK"
 echo
 echo "QR code: $(qr_link $SS_LINK)"
+
 echo
 echo "----"
 echo
+
+echo "SIP002 link: $SIP002_LINK"
+echo
+echo "QR code: $(qr_link $SIP002_LINK)"
+
+echo
+echo "----"
+echo
+
 echo "KCPTUN SS link (for Android and Windows clients): $KCPTUN_SS_LINK"
 echo
 echo "QR code: $(qr_link $KCPTUN_SS_LINK)"

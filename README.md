@@ -55,6 +55,15 @@ done!
 
 ### Optional
 
+* To specify the hostname and get links with the specified hostname:
+
+```bash
+docker run -t -i --rm --network=host \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -e HOST=YOUR_HOSTNAME \
+  yaleh/kcp-shadowsocks-server bootstrap
+```
+
 * Show Shadowsocks links and QR codes of a running worker container:
 
 ```
@@ -85,16 +94,22 @@ KCPTUN crypt option needs to be set at the client also to make it work.
 
 ### Env Variables
 
-* SS_PASSWORD
-* SS_METHOD
-*	KCPTUN_CRYPT
-*	KCPTUN_PASSWORD
-* KCPTUN_MTU
-*	KCPTUN_SNDWND
-* KCPTUN_RCVWND
-* KCPTUN_MODE
-* KCPTUN_DATASHARD
-* KCPTUN_PARITYSHARD
+Following env variables can be set when executing `bootstrap`:
+
+* INTERFACE: the network interface to find the IP address (default: the default network interface of the host)
+* HOST: the hostname or IP address of the server (default: IP address of INTERFACE)
+* SS_PORT: Shadowsocks server port (default: a random available port between 5000 and 20000)
+* SS_PASSWORD: Shadowsocks password (default: an auto generated password)
+* SS_METHOD: Shadowsocks password (default: aes-256-gcm)
+* KCPTUN_PORT: KCPTUN server port (default: a random available port between 5000 and 20000)
+*	KCPTUN_CRYPT: KCPTUN crypt method (default: aes)
+*	KCPTUN_PASSWORD: KCPTUN password (default: the same with SS_METHOD)
+* KCPTUN_MTU: KCPTUN MTU (default: 1350)
+*	KCPTUN_SNDWND: KCPTUN SNDWND (default: 256)
+* KCPTUN_RCVWND: KCPTUN RCVWND (default: 256)
+* KCPTUN_MODE: KCPTUN mode (default: normal)
+* KCPTUN_DATASHARD: KCPTUN DATASHARD (default 10)
+* KCPTUN_PARITYSHARD: KCPTUN PARITYSHARD (default: 3)
 
 ### Windows KCPTun Client
 

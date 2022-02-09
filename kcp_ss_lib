@@ -132,6 +132,7 @@ generate_dood_command(){
   local HOST=$2
 
   local SS_LINK="$(base64_ss_link $HOST)#SS:$HOST:$SS_PORT"
+  local SIP002_LINK=$(tag_link $(sip002_link $HOST $SS_PORT) "SS:$HOST:$SS_PORT")
   local KCPTUN_SS_LINK=$(tag_link $(kcp_ss_link $HOST) "KCPSS:$HOST:$KCPTUN_PORT")
 
   echo "docker run -d --restart=always \
@@ -141,7 +142,7 @@ generate_dood_command(){
     -e KCPTUN_MODE=$KCPTUN_MODE -e KCPTUN_PASSWORD=$KCPTUN_PASSWORD -e KCPTUN_MTU=$KCPTUN_MTU \
     -e KCPTUN_SNDWND=$KCPTUN_SNDWND -e KCPTUN_RCVWND=$KCPTUN_RCVWND \
     -e KCPTUN_DATASHARD=$KCPTUN_DATASHARD -e KCPTUN_PARITYSHARD=$KCPTUN_PARITYSHARD \
-    -e SS_LINK=$SS_LINK -e KCPTUN_SS_LINK=$KCPTUN_SS_LINK \
+    -e SS_LINK=$SS_LINK -e SIP002_LINK=$SIP002_LINK -e KCPTUN_SS_LINK=$KCPTUN_SS_LINK \
     --log-opt max-size=200k --log-opt max-file=1 \
     -p $SS_PORT:8338/tcp -p $SS_PORT:8338/udp -p $KCPTUN_PORT:41111/udp $IMAGE_ID"
 }
@@ -165,6 +166,22 @@ base64_ss_link(){
   echo "ss://$ENCODED"
 }
 
+sip002_link(){
+  local HOST=$1
+  local PORT=$2
+  PORT=${PORT:-$SS_PORT}
+  local PLUGIN=$3
+
+  local USER_INFO=`echo -n $SS_METHOD:$SS_PASSWORD|base64`
+  local SIP002_LINK="ss://$USER_INFO@$HOST:$PORT"
+
+  if [ ! -z "$PLUGIN" ]; then
+    SIP002_LINK="$SIP002_LINK/?$PLUGIN"
+  fi
+
+  echo "$SIP002_LINK"
+}
+
 kcp_ss_link(){
   # according to https://shadowsocks.org/en/spec/SIP002-URI-Scheme.html
   # compatible with Shadowsocks Android
@@ -177,7 +194,8 @@ kcp_ss_link(){
   RAW_KCPTUN_PLUGIN_STR+=";rcvwnd=$KCPTUN_RCVWND;sndwnd=$KCPTUN_CLIENT_SNDWND;key=$KCPTUN_PASSWORD;mtu=$KCPTUN_MTU"
   RAW_KCPTUN_PLUGIN_STR+=";datashard=$KCPTUN_DATASHARD;parityshard=$KCPTUN_PARITYSHARD"
 
-  echo "ss://$USER_INFO@$HOST:$KCPTUN_PORT?plugin=$(urlencode $RAW_KCPTUN_PLUGIN_STR)"
+  # echo "ss://$USER_INFO@$HOST:$KCPTUN_PORT?plugin=$(urlencode $RAW_KCPTUN_PLUGIN_STR)"
+  sip002_link $HOST $KCPTUN_PORT "plugin=$(urlencode $RAW_KCPTUN_PLUGIN_STR)"
 }
 
 tag_link(){

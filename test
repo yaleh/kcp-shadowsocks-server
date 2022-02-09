@@ -50,6 +50,12 @@ test_all(){
   ENCODED_STR=$(urlencode "abc://;=,:ABC")
   echo $ENCODED_STR
 
+  SIP002_LINK=$(sip002_link "www.google.com")
+  echo $SIP002_LINK
+
+  KCPTUN_SS_LINK=$(kcp_ss_link $NETWORK_ADDRESS $TCP_PORT $PASSWORD $UDP_PORT $PASSWORD)
+  echo $KCPTUN_SS_LINK
+
   ENCODED_URL=$(tag_link \
     $(kcp_ss_link $NETWORK_ADDRESS $TCP_PORT $PASSWORD $UDP_PORT $PASSWORD) \
     "$NETWORK_ADDRESS:$TCP_PORT")
