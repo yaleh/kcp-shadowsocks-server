@@ -23,7 +23,7 @@ jobs:
       shell: bash
       run: |
         [[ $GITHUB_REF_NAME = "master" ]] && TAG="latest" || TAG=$GITHUB_REF_NAME
-        echo ::set-output name=branch::$(echo $TAG)
+        echo "::set-output name=branch::$TAG"
       id: branch_name
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
