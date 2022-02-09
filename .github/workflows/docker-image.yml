@@ -19,8 +19,16 @@ jobs:
     - name: Get the version
       id: vars
       run: echo ::set-output name=tag::$(date +%s)
+    # - name: Extract branch name
+    #   shell: bash
+    #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+    #   id: extract_branch
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
     - name: Push the tagged Docker image
       run: docker push yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
+    - name: Build the branch Docker image
+      run: docker build . --file Dockerfile --tag yaleh/kcp-shadowsocks-server:$GITHUB_REF_NAME
+    - name: Push the tagged branch Docker image
+      run: docker push yaleh/kcp-shadowsocks-server:$GITHUB_REF_NAME
     
