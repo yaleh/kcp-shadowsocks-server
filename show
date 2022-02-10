@@ -6,7 +6,7 @@ if [ -z "$SS_LINK" ]; then
     SS_LINK="$(base64_ss_link $HOST $SS_PORT $SS_PASSWORD $SS_METHOD)#SS:$HOST:$SS_PORT"
 fi
 
-if [ -z "$SIP002_LINK"]; then
+if [ -z "$SIP002_LINK" ]; then
     SIP002_LINK=$(tag_link $(sip002_link $HOST $SS_PORT) "SS:$HOST:$SS_PORT")
 fi
 
