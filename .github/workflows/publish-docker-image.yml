@@ -61,9 +61,8 @@ jobs:
     - name: Show the downloaded files
       shell: bash
       run: |
-        ls
-        ls docker-images
-        ls kcp-shadowsocks-server.tar.gz
+        ls -al
+        ls -al kcp-shadowsocks-server.tar.gz
       id: ls_files
     - name: Load Docker image
       shell: bash
