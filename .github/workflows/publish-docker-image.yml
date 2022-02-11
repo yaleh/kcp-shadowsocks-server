@@ -60,9 +60,7 @@ jobs:
       id: branch_name
     - name: Show the downloaded files
       shell: bash
-      run: |
-        ls -al
-        ls -al kcp-shadowsocks-server.tar.gz
+      run: ls -al
       id: ls_files
     - name: Load Docker image
       shell: bash
@@ -72,3 +70,8 @@ jobs:
       run: |
         docker tag yaleh/kcp-shadowsocks-server yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
         docker tag yaleh/kcp-shadowsocks-server yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
+    - name: Publish Docker images
+      shell: bash
+      run: |
+        docker push yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
+        docker push yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
