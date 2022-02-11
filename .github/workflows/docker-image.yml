@@ -39,7 +39,7 @@ jobs:
     - name: Upload the saved tagged Docker image
       uses: actions/upload-artifact@v2
       with:
-        name: kcp-shadowsocks-server.tar.gz
+        name: docker-images
         path: kcp-shadowsocks-server.tar.gz
     # - name: Tag the image as the branch one
     #   run: docker tag yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}} yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
