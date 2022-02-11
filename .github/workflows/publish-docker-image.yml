@@ -70,6 +70,8 @@ jobs:
       run: |
         docker tag yaleh/kcp-shadowsocks-server yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
         docker tag yaleh/kcp-shadowsocks-server yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
+    - name: Login to DockerHub Registry
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
     - name: Publish Docker images
       shell: bash
       run: |
