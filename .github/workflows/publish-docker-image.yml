@@ -14,7 +14,7 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       with:
         # Required, workflow file name or ID
-        workflow: docker_image.yml
+        workflow: docker-image.yml
         # Optional, the status or conclusion of a completed workflow to search for
         # Can be one of a workflow conclusion:
         #   "failure", "success", "neutral", "cancelled", "skipped", "timed_out", "action_required"
