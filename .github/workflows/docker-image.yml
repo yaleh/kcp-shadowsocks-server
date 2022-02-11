@@ -28,8 +28,8 @@ jobs:
       id: branch_name
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
-    - name: Push the tagged Docker image
-      run: docker push yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
+    # - name: Push the tagged Docker image
+    #   run: docker push yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
     - name: Save the tagged Docker image
       run: docker save -o kcp-shadowsocks-server.${{steps.vars.outputs.tag}}.tar.gz yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
     - name: Upload the saved tagged Docker image
@@ -41,6 +41,6 @@ jobs:
       run: docker tag yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}} yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
     # - name: Build the branch Docker image
     #   run: docker build . --file Dockerfile --tag yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
-    - name: Push the tagged branch Docker image
-      run: docker push yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
+    # - name: Push the tagged branch Docker image
+    #   run: docker push yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
     
