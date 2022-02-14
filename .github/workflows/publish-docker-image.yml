@@ -77,11 +77,12 @@ jobs:
       run: |
         docker push yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
         docker push yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
-    - uses: actions/checkout@v2
-    - name: Docker Hub Description
-      if: ${{ env.GITHUB_REF_NAME }} == 'master' }}
-      uses: peter-evans/dockerhub-description@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-        repository: yaleh/kcp-shadowsocks-server
+    # Docker hub README can only be updated with password, not token.
+    # - uses: actions/checkout@v2
+    # - name: Docker Hub Description
+    #   if: ${{ env.GITHUB_REF_NAME }} == 'master' }}
+    #   uses: peter-evans/dockerhub-description@v2
+    #   with:
+    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+    #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+    #     repository: yaleh/kcp-shadowsocks-server
