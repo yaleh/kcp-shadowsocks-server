@@ -77,11 +77,10 @@ jobs:
       run: |
         docker push yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
         docker push yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
-    - name: Test develop branch
-      if: ${{ env.GITHUB_REF_NAME }} == 'develop' }}
-      shell: bash
-      run: echo "Develop branch."
-    - name: Test master branch
-      if: ${{ env.GITHUB_REF_NAME }} != 'master' }}
-      shell: bash
-      run: echo "Not master branch."
+    - name: Docker Hub Description
+      if: ${{ env.GITHUB_REF_NAME }} == 'master' }}
+      uses: peter-evans/dockerhub-description@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        repository: yaleh/kcp-shadowsocks-server
