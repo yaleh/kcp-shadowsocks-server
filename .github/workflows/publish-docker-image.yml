@@ -38,7 +38,7 @@ jobs:
         # will download all artifacts if not specified
         # and extract them in respective subdirectories
         # https://github.com/actions/download-artifact#download-all-artifacts
-        # name: artifact_name
+        name: docker-images
         # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
         path: ./
         # Optional, defaults to current repo
@@ -50,7 +50,40 @@ jobs:
         # Optional, search for the last workflow run whose stored an artifact named as in `name` input
         # default false
         # search_artifacts: false
+    - name: Get the version
+      id: vars
+      run: echo ::set-output name=tag::$(date +%s)
+    - name: Build branch name
+      shell: bash
+      run: |
+        [[ $GITHUB_REF_NAME = "master" ]] && TAG="latest" || TAG=$GITHUB_REF_NAME
+        echo "::set-output name=branch::$TAG"
+      id: branch_name
     - name: Show the downloaded files
       shell: bash
-      run: ls
+      run: ls -al
       id: ls_files
+    - name: Load Docker image
+      shell: bash
+      run: docker load --input kcp-shadowsocks-server.tar.gz
+    - name: Retag Docker image
+      shell: bash
+      run: |
+        docker tag yaleh/kcp-shadowsocks-server yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
+        docker tag yaleh/kcp-shadowsocks-server yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
+    - name: Login to DockerHub Registry
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    - name: Publish Docker images
+      shell: bash
+      run: |
+        docker push yaleh/kcp-shadowsocks-server:${{steps.vars.outputs.tag}}
+        docker push yaleh/kcp-shadowsocks-server:${{steps.branch_name.outputs.branch}}
+    # Docker hub README can only be updated with password, not token.
+    # - uses: actions/checkout@v2
+    # - name: Docker Hub Description
+    #   if: ${{ env.GITHUB_REF_NAME }} == 'master' }}
+    #   uses: peter-evans/dockerhub-description@v2
+    #   with:
+    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+    #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+    #     repository: yaleh/kcp-shadowsocks-server
