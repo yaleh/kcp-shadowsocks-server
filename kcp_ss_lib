@@ -25,7 +25,13 @@ urldecode() {
 }
 
 get_docker_container_id(){
-  basename "$(cat /proc/1/cpuset)"
+  local CONTAINER_ID=$(basename "$(cat /proc/1/cpuset)")
+
+  if [ -z ${CONTAINER_ID} -o ${CONTAINER_ID} = "/" ]; then
+    CONTAINER_ID=$(cat /proc/self/mountinfo | grep "docker/containers/.*/hostname" | cut -d "/" -f 6)
+  fi
+
+  echo ${CONTAINER_ID}
 }
 
 get_docker_image_name(){
