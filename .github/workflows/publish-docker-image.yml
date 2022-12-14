@@ -52,12 +52,12 @@ jobs:
         # search_artifacts: false
     - name: Get the version
       id: vars
-      run: echo ::set-output name=tag::$(date +%s)
+      run: echo "tag=$(date +%s)" >> $GITHUB_OUTPUT
     - name: Build branch name
       shell: bash
       run: |
         [[ $GITHUB_REF_NAME = "master" ]] && TAG="latest" || TAG=$GITHUB_REF_NAME
-        echo "::set-output name=branch::$TAG"
+        echo "branch=$TAG" >> $GITHUB_OUTPUT
       id: branch_name
     - name: Show the downloaded files
       shell: bash
